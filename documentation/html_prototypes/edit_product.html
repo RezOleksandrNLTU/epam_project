@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit product</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div class="absolute w-full pt-5">
+    <div class="flex w-5/6 justify-between mx-auto">
+        <div class="flex">
+            <a class="border-2 rounded-l font-semibold p-2 pt-1 border-gray-500 m-0 hover:bg-gray-100" href="#">Products</a>
+            <a class="border-2 border-l-0 rounded-r font-semibold p-2 pt-1 border-gray-500 hover:bg-gray-100" href="#">Orders</a>
+        </div>
+        <div class="flex">
+            <a class="border-2 rounded-l font-semibold p-2 pt-1 border-gray-500 m-0 hover:bg-gray-100" href="#">My profile</a>
+            <a class="border-2 border-l-0 rounded-r font-semibold p-2 pt-1 border-gray-500 hover:bg-gray-100" href="#">Log out</a>
+        </div>
+    </div>
+</div>
+<div class="grid h-screen place-items-center">
+    <div class="w-5/6 h-5/6 bg-slate-100 rounded">
+        <div class="grid h-full place-items-center">
+            <div class="flex flex-col w-3/4 mx-auto">
+                <div class="flex justify-center mb-5">
+                    <label class="mr-14 w-12" for="name">Name</label>
+                    <input class="border-2 rounded border-gray-500 px-1 w-56" type="text" id="name" name="name" placeholder="Name" value="Product 1">
+                </div>
+                <div class="flex justify-center mb-5">
+                    <label class="mr-14 w-12" for="description">Description</label>
+                    <textarea class="border-2 rounded border-gray-500 px-1 w-56" id="description" name="description" placeholder="Description">Product 1 description</textarea>
+                </div>
+                <div class="flex justify-center mb-5">
+                    <label class="mr-14 w-12" for="price">Price</label>
+                    <input class="border-2 rounded border-gray-500 px-1 w-56" type="number" id="price" name="price" placeholder="Price" value="100">
+                </div>
+                <div class="flex justify-center mb-5">
+                    <label class="mr-14 w-12" for="inventory">Inventory</label>
+                    <input class="border-2 rounded border-gray-500 px-1 w-56" type="number" id="inventory" name="inventory" placeholder="Inventory" value="50">
+                </div>
+                <div class="flex justify-center space-x-12 mt-10">
+                    <a class="border-2 w-24 p-2 pt-1 text-center rounded font-semibold hover:bg-gray-100 border-gray-500 bg-white shadow-md">Save</a>
+                    <a class="border-2 w-24 p-2 pt-1 text-center rounded font-semibold hover:bg-gray-100 border-gray-500 bg-white shadow-md">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

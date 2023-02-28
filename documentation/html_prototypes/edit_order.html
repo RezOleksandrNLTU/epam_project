@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit order</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div class="absolute w-full pt-5">
+    <div class="flex w-5/6 justify-between mx-auto">
+        <div class="flex">
+            <a class="border-2 rounded-l font-semibold p-2 pt-1 border-gray-500 m-0 hover:bg-gray-100" href="#">Products</a>
+            <a class="border-2 border-l-0 rounded-r font-semibold p-2 pt-1 border-gray-500 hover:bg-gray-100" href="#">Orders</a>
+        </div>
+        <div class="flex">
+            <a class="border-2 rounded-l font-semibold p-2 pt-1 border-gray-500 m-0 hover:bg-gray-100" href="#">My profile</a>
+            <a class="border-2 border-l-0 rounded-r font-semibold p-2 pt-1 border-gray-500 hover:bg-gray-100" href="#">Log out</a>
+        </div>
+    </div>
+</div>
+<div class="grid h-screen place-items-center">
+    <div class="w-5/6 h-5/6 bg-slate-100 rounded">
+        <div class="grid h-full place-items-center">
+            <div class="flex flex-col w-3/4 mx-auto">
+                <div class="flex justify-center mb-5">
+                    <label class="mr-14 w-16" for="name">Order ID</label>
+                    <input class="border-2 rounded border-gray-500 px-1 w-56 bg-gray-300" type="text" id="name" name="name" placeholder="Order ID" readonly value="1111">
+                </div>
+                <div class="flex justify-center mb-5">
+                    <label class="mr-14 w-16" for="product">Product</label>
+                    <select class="border-2 rounded border-gray-500 px-1 w-56" name="product" id="product">
+                        <option value="Product 1">Product 1</option>
+                        <option value="Product 2">Product 2</option>
+                        <option value="Product 3">Product 3</option>
+                    </select>
+                </div>
+                <div class="flex justify-center mb-5">
+                    <label class="mr-14 w-16" for="quantity">Quantity</label>
+                    <input class="border-2 rounded border-gray-500 px-1 w-56" type="number" id="quantity" name="quantity" placeholder="Quantity" value="1">
+                </div>
+                <div class="flex justify-center mb-5">
+                    <label class="mr-14 w-16" for="date">Date</label>
+                    <input class="border-2 rounded border-gray-500 px-1 w-56 bg-gray-300" type="date" id="date" name="date" placeholder="Date" value="2023-02-11">
+                </div>
+                <div class="flex justify-center mb-5">
+                    <label class="mr-14 w-16" for="customer">Customer</label>
+                    <textarea class="border-2 rounded border-gray-500 px-1 w-56" id="customer" name="customer" placeholder="Customer">Customer 1</textarea>
+                </div>
+                <div class="flex justify-center mb-5">
+                    <label class="mr-14 w-16" for="status">Status</label>
+                    <select class="border-2 rounded border-gray-500 px-1 w-56" name="status" id="status">
+                        <option value="Complete">Complete</option>
+                        <option value="In progress">In progress</option>
+                    </select>
+                </div>
+                <div class="flex justify-center space-x-12 mt-10">
+                    <a class="border-2 w-24 p-2 pt-1 text-center rounded font-semibold hover:bg-gray-100 border-gray-500 bg-white shadow-md">Save</a>
+                    <a class="border-2 w-24 p-2 pt-1 text-center rounded font-semibold hover:bg-gray-100 border-gray-500 bg-white shadow-md">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
