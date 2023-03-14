@@ -142,7 +142,7 @@ When adding a product, the following details are entered:
 
 Constraints for data validation:
 - Name - maximum length of 30 characters, not empty
-- E-mail - maximum length of 300 characters, not empty
+- Description - maximum length of 300 characters, not empty
 - Price - number greater than 0
 - Inventory - non-negative integer
 

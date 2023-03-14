@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% block header %}
+<div class="absolute w-full pt-5">
+    <div class="flex w-5/6 justify-between mx-auto">
+        <div class="flex">
+            <a class="border-2 rounded-l font-semibold p-2 pt-1 border-gray-500 m-0 hover:100" href="{{ url_for('products.products_') }}">Products</a>
+            {% if not current_user.is_admin %}
+            <a class="border-2 border-l-0 rounded-r font-semibold p-2 pt-1 border-gray-500 bg-slate-300 hover:bg-slate-200" href="{{ url_for('orders.orders_') }}">Orders</a>
+            {% else %}
+            <a class="border-2 border-x-0 font-semibold p-2 pt-1 border-gray-500 bg-slate-300 hover:bg-slate-200" href="{{ url_for('orders.orders_') }}">Orders</a>
+            <a class="border-2 rounded-r font-semibold p-2 pt-1 border-gray-500 hover:bg-gray-100" href="{{ url_for('sellers.sellers_') }}">Sellers</a>
+            {% endif %}
+        </div>
+        <div class="flex">
+            <a class="border-2 rounded-l font-semibold p-2 pt-1 border-gray-500 m-0 hover:bg-gray-100" href="{{ url_for('sellers.profile') }}">My profile</a>
+            <a class="border-2 border-l-0 rounded-r font-semibold p-2 pt-1 border-gray-500 hover:bg-gray-100" href="{{ url_for('auth.logout') }}">Log out</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="w-5/6 h-5/6  bg-slate-100 rounded">
+    <div class="flex justify-between border-b-2 content-center py-1">
+        <div class="flex">
+            <div class="flex justify-between p-3 px-5">
+                <label class="mr-6" for="status">Status</label>
+                <select name="status" id="status">
+                    <option value=""></option>
+                    <option value="Complete">Complete</option>
+                    <option value="In progress">In progress</option>
+                </select>
+            </div>
+        </div>
+        <div class="p-1.5 h-fit flex my-auto border-2 border-gray-500 rounded-full bg-gray-100 bg-white hover:bg-gray-100 mr-5" id="refresh_button">
+            <svg height="22px" width="22px" viewBox="0 0 489.698 489.698">
+                <g>
+                    <g>
+                        <path d="M468.999,227.774c-11.4,0-20.8,8.3-20.8,19.8c-1,74.9-44.2,142.6-110.3,178.9c-99.6,54.7-216,5.6-260.6-61l62.9,13.1
+                   			c10.4,2.1,21.8-4.2,23.9-15.6c2.1-10.4-4.2-21.8-15.6-23.9l-123.7-26c-7.2-1.7-26.1,3.5-23.9,22.9l15.6,124.8
+                   			c1,10.4,9.4,17.7,19.8,17.7c15.5,0,21.8-11.4,20.8-22.9l-7.3-60.9c101.1,121.3,229.4,104.4,306.8,69.3
+                   			c80.1-42.7,131.1-124.8,132.1-215.4C488.799,237.174,480.399,227.774,468.999,227.774z"/>
+                        <path d="M20.599,261.874c11.4,0,20.8-8.3,20.8-19.8c1-74.9,44.2-142.6,110.3-178.9c99.6-54.7,216-5.6,260.6,61l-62.9-13.1
+                   			c-10.4-2.1-21.8,4.2-23.9,15.6c-2.1,10.4,4.2,21.8,15.6,23.9l123.8,26c7.2,1.7,26.1-3.5,23.9-22.9l-15.6-124.8
+                   			c-1-10.4-9.4-17.7-19.8-17.7c-15.5,0-21.8,11.4-20.8,22.9l7.2,60.9c-101.1-121.2-229.4-104.4-306.8-69.2
+                   			c-80.1,42.6-131.1,124.8-132.2,215.3C0.799,252.574,9.199,261.874,20.599,261.874z"/>
+                    </g>
+                </g>
+            </svg>
+        </div>
+    </div>
+    <div class="h-[93%] overflow-auto">
+        <table class="w-full table-auto border-collapse border border-slate-500">
+            <thead class="bg-slate-300">
+            <tr class="">
+                        <th class="border-x border-x-slate-500">Order ID</th>
+                        <th class="border-x border-x-slate-500">Product</th>
+                        <th class="border-x border-x-slate-500">Quantity</th>
+                        <th class="border-x border-x-slate-500">Total cost</th>
+                        <th class="border-x border-x-slate-500">Date</th>
+                        <th class="border-x border-x-slate-500">Customer</th>
+                        <th class="border-x border-x-slate-500">Status</th>
+                        <th class="border-x border-x-slate-500">Actions</th>
+                    </tr>
+            </thead>
+            <tbody id="tbody" class="">
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="absolute bottom-[4%] right-[9%] mb-15">
+    <button class="border-2 rounded font-semibold px-4 border-gray-500 m-0 hover:bg-gray-100" id="add">Add</button>
+</div>
+<script>
+    let edit_function = function (id) {
+        window.location.href = "{{ url_for('orders.edit_order') }}/" + id;
+    }
+
+    let delete_function = function (id) {
+        if (confirm("Confirm deletion")) {
+            $.ajax({
+                url: "{{ url_for('rest_api.orderapi') }}" + "/" + id,
+                type: "DELETE",
+                success: function (data, textStatus, jqXHR) {
+                    if (jqXHR.status === 200) {
+                        document.location.reload(true);
+                    } else {
+                        alert(data.message);
+                    }
+                }
+            });
+        }
+    }
+
+    window.onload = function () {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+
+        let status;
+
+        if (urlParams.has('status')) {
+            status = urlParams.get('status');
+            document.getElementById('status').value = status;
+        }
+
+        $.ajax({
+            url: "{{ url_for('rest_api.ordersapi') }}",
+            type: "GET",
+            data: {
+                status: status
+            },
+            success: function (data) {
+                let tbody = document.getElementById('tbody');
+                tbody.innerHTML = "";
+
+                data.forEach(function (order) {
+                    let tr = document.createElement('tr');
+                    tr.className = "bg-slate-200";
+
+                    let id = document.createElement('td');
+                    id.className = "p-1 border-x border-x-slate-500";
+                    id.innerText = order.id;
+
+                    let product = document.createElement('td');
+                    product.className = "p-1 border-x border-x-slate-500";
+                    product.innerText = order.product_name;
+
+                    let quantity = document.createElement('td');
+                    quantity.className = "p-1 border-x border-x-slate-500";
+                    quantity.innerText = order.quantity;
+
+                    let total_cost = document.createElement('td');
+                    total_cost.className = "p-1 border-x border-x-slate-500";
+                    total_cost.innerText = order.total;
+
+                    let date = document.createElement('td');
+                    date.className = "p-1 border-x border-x-slate-500";
+                    //format date
+                    let date_obj = new Date(order.date);
+                    let date_str = date_obj.getDate() + "/" + (date_obj.getMonth() + 1) + "/" + date_obj.getFullYear();
+
+                    date.innerText = date_str;
+
+                    let customer_details = document.createElement('td');
+                    customer_details.className = "p-1 border-x border-x-slate-500";
+                    customer_details.innerText = order.customer_details;
+
+                    let status = document.createElement('td');
+                    status.className = "p-1 border-x border-x-slate-500";
+                    status.innerText = order.status;
+
+                    let actions = document.createElement('td');
+                    actions.className = "p-1 border-x border-x-slate-500";
+                    actions.innerHTML = `
+                        <div class="flex justify-center">
+                            <button onclick="edit_function(${order.id})" class="border-2 rounded-l font-semibold px-4 border-gray-500 m-0 hover:bg-gray-100">Edit</button>
+                            <button class="border-2 border-l-0 rounded-r font-semibold px-2 border-gray-500 m-0 hover:bg-gray-100" onclick="delete_function(${order.id})">Delete</button>
+                        </div>
+                    `;
+
+                    tr.appendChild(id);
+                    tr.appendChild(product);
+                    tr.appendChild(quantity);
+                    tr.appendChild(total_cost);
+                    tr.appendChild(date);
+                    tr.appendChild(customer_details);
+                    tr.appendChild(status);
+                    tr.appendChild(actions);
+
+                    tbody.appendChild(tr);
+
+
+                });
+            },
+            error: function (xhr) {
+                alert(xhr.responseJSON.message);
+            }
+
+        });
+    }
+
+
+    refresh_button = document.getElementById('refresh_button');
+    refresh_button.addEventListener('click', function () {
+        let status = document.getElementById('status').value;
+
+        let url = "{{ url_for('orders.orders_') }}";
+
+        if (status !== "") {
+            url += "?status=" + status;
+        }
+
+        window.location.href = url;
+    });
+
+    add_button = document.getElementById('add');
+    add_button.addEventListener('click', function () {
+        window.location.href = "{{ url_for('orders.add_order') }}";
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block header %}
+<div class="absolute w-full pt-5">
+    <div class="flex w-5/6 justify-between mx-auto">
+        <div class="flex">
+            <a class="border-2 rounded-l font-semibold p-2 pt-1 border-gray-500 m-0 hover:bg-gray-100" href="{{ url_for('products.products_') }}">Products</a>
+            {% if not current_user.is_admin %}
+            <a class="border-2 border-l-0 rounded-r font-semibold p-2 pt-1 border-gray-500 hover:bg-gray-100" href="{{ url_for('orders.orders_') }}">Orders</a>
+            {% else %}
+            <a class="border-2 border-x-0 font-semibold p-2 pt-1 border-gray-500 hover:bg-gray-100" href="{{ url_for('orders.orders_') }}">Orders</a>
+            <a class="border-2 rounded-r font-semibold p-2 pt-1 border-gray-500 hover:bg-gray-100" href="{{ url_for('sellers.sellers_') }}">Sellers</a>
+            {% endif %}
+        </div>
+        <div class="flex">
+            <a class="border-2 rounded-l font-semibold p-2 pt-1 border-gray-500 m-0 hover:bg-slate-100" href="{{ url_for('sellers.profile') }}">My profile</a>
+            <a class="border-2 border-l-0 rounded-r font-semibold p-2 pt-1 border-gray-500 hover:bg-gray-100" href="{{ url_for('auth.logout') }}">Log out</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+ <div class="w-5/6 h-5/6 bg-slate-100 rounded">
+     <div class="grid h-full place-items-center">
+         <form class="flex flex-col w-3/4 mx-auto" method="POST" action="{{ url_for('rest_api.orderapi') }}" id="form">
+             <div class="flex justify-center mb-5">
+                 <label class="mr-14 w-16" for="product">Product</label>
+                 <select class="border-2 rounded border-gray-500 px-1 w-56" name="product" id="product">
+                 </select>
+             </div>
+             <div class="flex justify-center mb-5">
+                 <label class="mr-14 w-16" for="quantity">Quantity</label>
+                 <input class="border-2 rounded border-gray-500 px-1 w-56" type="number" id="quantity" name="quantity" placeholder="Quantity" value="">
+             </div>
+             <div class="flex justify-center mb-5">
+                 <label class="mr-14 w-16" for="date">Date</label>
+                 <input class="border-2 rounded border-gray-500 px-1 w-56 bg-gray-300" type="date" id="date" name="date" placeholder="Date" value="" readonly>
+             </div>
+             <div class="flex justify-center mb-5">
+                 <label class="mr-14 w-16" for="customer_details">Customer</label>
+                 <textarea class="border-2 rounded border-gray-500 px-1 w-56" id="customer_details" name="customer_details" placeholder="Customer details"></textarea>
+             </div>
+             <div class="flex justify-center mb-5">
+                 <label class="mr-14 w-16" for="status">Status</label>
+                 <select class="border-2 rounded border-gray-500 px-1 w-56" name="status" id="status">
+                     <option value="Complete">Complete</option>
+                     <option value="In progress">In progress</option>
+                 </select>
+             </div>
+             <div class="flex justify-center space-x-12 mt-10">
+                 <input class="border-2 w-24 p-2 pt-1 text-center rounded font-semibold hover:bg-gray-100 border-gray-500 bg-white shadow-md" type="submit" value="Edit">
+                 <a class="border-2 w-24 p-2 pt-1 text-center rounded font-semibold hover:bg-gray-100 border-gray-500 bg-white shadow-md" href="{{ url_for('orders.orders_') }}">Cancel</a>
+             </div>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="m-auto w-full text-center text-red-900">{{ messages[0] }}</div>
+            {% endif %}
+            {% endwith %}
+         </form>
+     </div>
+ </div>
+<script>
+    window.onload = function () {
+        let orderId = window.location.href.split("/").pop();
+
+        $.ajax({
+            url: "{{ url_for('rest_api.productsapi') }}",
+            type: "GET",
+            success: function (data) {
+                let product_select = document.getElementById("product");
+
+                data.forEach(function (product) {
+                    let option = document.createElement("option");
+                    option.value = product.id;
+                    option.text = product.name;
+                    product_select.appendChild(option);
+                });
+            },
+            error: function (xhr) {
+                alert(xhr.responseJSON.message);
+            }
+        });
+
+        $.ajax({
+            url: "{{ url_for('rest_api.orderapi') }}" + "/" + orderId,
+            type: "GET",
+            dataType: 'json',
+            success: function (response, status, xhr) {
+                console.log(response);
+                document.getElementById("product").value = response.product_id;
+                document.getElementById("quantity").value = response.quantity;
+                document.getElementById("date").value = new Date(response.date).toISOString().split('T')[0];
+                document.getElementById("customer_details").value = response.customer_details;
+                document.getElementById("status").value = response.status;
+            },
+            error: function (xhr, status, error) {
+                alert("Error: " + xhr.status + " " + xhr.statusText);
+            }
+        })
+    }
+
+    $("#form").submit(function(e) {
+        e.preventDefault();
+        let orderId = window.location.href.split("/").pop();
+
+        $.ajax({
+            url: "{{ url_for('rest_api.orderapi') }}" + "/" + orderId,
+            type: "PUT",
+            contentType: 'application/json',
+            data: JSON.stringify({
+                "product": document.getElementById("product").value,
+                "quantity": document.getElementById("quantity").value,
+                "date": document.getElementById("date").value,
+                "customer_details": document.getElementById("customer_details").value,
+                "status": document.getElementById("status").value
+            }),
+            success: function (response, status, xhr) {
+                if (xhr.status === 200) {
+                    window.location.href = "{{ url_for('orders.orders_') }}";
+                }
+                else {
+                    alert(xhr.responseJSON.message);
+                }
+            },
+            error: function (xhr) {
+                console.log(xhr);
+                alert(xhr.responseJSON.message);
+            }
+        });
+    });
+
+</script>
+{% endblock %}
