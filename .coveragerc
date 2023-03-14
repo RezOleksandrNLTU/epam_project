@@ -1,0 +1,7 @@
+[run]
+branch = True
+omit =
+    tests/*
+    ecom_app/migrations/*
+    instance/*
+    wsgi.py
