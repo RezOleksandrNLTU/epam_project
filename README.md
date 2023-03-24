@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/RezOleksandr/epam_final_project/badge.svg)](https://coveralls.io/github/RezOleksandr/epam_final_project)
+[![Coverage Status](https://coveralls.io/repos/github/RezOleksandrNLTU/epam_project/badge.svg?branch=main)](https://coveralls.io/github/RezOleksandrNLTU/epam_project?branch=main) [![Build Status](https://app.travis-ci.com/RezOleksandrNLTU/epam_project.svg?branch=main)](https://app.travis-ci.com/RezOleksandrNLTU/epam_project)
 
 # E-commerce Platform
 
